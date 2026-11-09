@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MD Ratul DesignHub — YouTube thumbnail designer. High-CTR thumbnails that get more clicks.">
+    <meta name="theme-color" content="#090d16">
+    <title>MD Ratul DesignHub — High-CTR Thumbnail Designer</title>
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --card-bg: #111827;
+            --accent-color: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.35);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .profile-wrapper {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-pic {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top center;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 0 25px var(--accent-glow);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 35px var(--accent-color);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            color: var(--accent-color);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            margin-top: 8px;
+        }
+
+        .badge {
+            background: #0284c7;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        section {
+            margin: 50px 0;
+        }
+
+        section.container {
+            margin: 50px auto;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        /* 3-Row Infinite Slider (each design appears only once) */
+        .marquee-wrapper {
+            --slider-w: min(100vw, 1920px);
+            --card-w: 300px;
+            width: var(--slider-w);
+            position: relative;
+            left: 50%;
+            margin-left: calc(var(--slider-w) / -2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 12px 0;
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+        }
+
+        /* People who prefer less motion: no auto-scroll, swipe the rows instead */
+        @media (prefers-reduced-motion: reduce) {
+            .marquee-wrapper { overflow-x: auto; }
+        }
+
+        .portfolio-card {
+            width: var(--card-w);
+            margin-right: 15px;
+            flex-shrink: 0;
+            position: relative;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .portfolio-card .img-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            overflow: hidden;
+        }
+
+        .portfolio-card img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        @media (hover: hover) {
+            .portfolio-card:hover {
+                transform: scale(1.05);
+                border-color: var(--accent-color);
+                box-shadow: 0 8px 25px var(--accent-glow);
+            }
+
+            .portfolio-card:hover img {
+                transform: scale(1.1);
+            }
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85%;
+            border-radius: 10px;
+            box-shadow: 0 0 30px var(--accent-color);
+        }
+
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #1e293b;
+        }
+
+        .skill-card h3 {
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .price-card {
+            background: var(--card-bg);
+            border: 1px solid #1e293b;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .price-card.popular {
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .price-card .price {
+            font-size: 2.2rem;
+            color: var(--accent-color);
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .price-card ul {
+            list-style: none;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .price-card ul li {
+            margin-bottom: 8px;
+            color: var(--text-sub);
+        }
+
+        .contact-section {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #1e293b;
+        }
+
+        .contact-section h2 {
+            border-left: 0;
+            padding-left: 0;
+        }
+
+        .contact-line {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px 22px;
+        }
+
+        .contact-line .lbl { white-space: nowrap; }
+        .contact-line strong { overflow-wrap: anywhere; text-align: left; }
+
+        @media (max-width: 480px) {
+            .contact-line { font-size: 0.95rem; }
+            .contact-line .item { gap: 4px 8px; flex-wrap: wrap; justify-content: center; }
+            .contact-line strong { flex-basis: 100%; text-align: center; }
+        }
+
+        .contact-line .item {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-line a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-line a:hover { text-decoration: underline; }
+
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .contact-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px 8px 8px;
+            border-radius: 999px;
+            background: #0b1220;
+            border: 1px solid #1e293b;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .contact-links a:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+
+        .contact-links a:focus-visible,
+        .lightbox:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 3px;
+        }
+
+        .ic {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .ic svg { width: 19px; height: 19px; display: block; }
+        .ic.mail { background: #EA4335; }
+        .ic.wa   { background: #25D366; }
+        .ic.in   { background: #0A66C2; }
+        .ic.ig   { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #0f172a;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.8 7.6l8.2 5.9 8.2-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></symbol>
+    <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.25" fill="currentColor"/></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z"/></symbol>
+  </svg>
+
+<div class="container">
+    <header>
+        <div class="profile-wrapper">
+            <img src="profile.jpg" alt="MD Ratul Profile Picture" class="profile-pic">
+        </div>
+        <h1>MD Ratul DesignHub</h1>
+        <p>Graphic Designer | High-CTR Thumbnail Specialist</p>
+        <p style="color: #cbd5e1; margin-top: 5px;">Helping YouTubers get more clicks 🚀</p>
+        <div class="badge">Worked With 20+ Clients</div>
+    </header>
+
+    <section>
+        <h2>Featured Thumbnails</h2>
+        <div class="marquee-wrapper">
+
+            <!-- LINE 1: Right to Left (slow) -->
+            <div class="marquee-track track-left">
+                <div class="portfolio-card" onclick="openLightbox('indiya.jpg')"><div class="img-wrapper"><img src="indiya.jpg" alt="Stamp Down Cockroaches Thumbnail"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('etsy.jpg')"><div class="img-wrapper"><img src="etsy.jpg" alt="Etsy Thumbnail"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('five-color.jpg')"><div class="img-wrapper"><img src="five-color.jpg" alt="$100 Per Month Thumbnail"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('photoshop-design-th.jpg')"><div class="img-wrapper"><img src="photoshop-design-th.jpg" alt="Photoshop Design"></div></div>
+            </div>
+
+            <!-- LINE 2: Left to Right (faster) -->
+            <div class="marquee-track track-right">
+                <div class="portfolio-card" onclick="openLightbox('zero-to-100.jpg')"><div class="img-wrapper"><img src="zero-to-100.jpg" alt="Cold vs Hot Thumbnail"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('untitled-1.jpg')"><div class="img-wrapper"><img src="untitled-1.jpg" alt="Stop Losing Sales"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('ebook.jpg')"><div class="img-wrapper"><img src="ebook.jpg" alt="Ebook Thumbnail"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('vologe.jpg')"><div class="img-wrapper"><img src="vologe.jpg" alt="VIP Cruise"></div></div>
+            </div>
+
+            <!-- LINE 3: Right to Left (slowest) -->
+            <div class="marquee-track track-left">
+                <div class="portfolio-card" onclick="openLightbox('trading-50.jpg')"><div class="img-wrapper"><img src="trading-50.jpg" alt="Just $50 To Profit Thumbnail"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('youtube.jpg')"><div class="img-wrapper"><img src="youtube.jpg" alt="Mountain Tour"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('no-ram.jpg')"><div class="img-wrapper"><img src="no-ram.jpg" alt="No RAM At Home Thumbnail"></div></div>
+                <div class="portfolio-card" onclick="openLightbox('idea.jpg')"><div class="img-wrapper"><img src="idea.jpg" alt="Start A Business Thumbnail"></div></div>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Popup Preview">
+    </div>
+
+    <section class="container">
+        <h2>Tools & Software Skills</h2>
+        <div class="skills-container">
+            <div class="skill-card"><h3>Adobe Photoshop</h3><p>95% Proficiency</p></div>
+            <div class="skill-card"><h3>Adobe Illustrator</h3><p>99% Proficiency</p></div>
+            <div class="skill-card"><h3>Blender</h3><p>99% Proficiency</p></div>
+            <div class="skill-card"><h3>Adobe Lightroom</h3><p>99% Proficiency</p></div>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2>Pricing Packages</h2>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Basic Pack</h3>
+                <div class="price">$20</div>
+                <ul><li>✔ 1 High-CTR Thumbnail</li><li>✔ 24-48 Hours Delivery</li><li>✔ Unlimited Revisions</li></ul>
+                <a href="https://wa.me/8801701320269" class="btn">Order Now</a>
+            </div>
+            <div class="price-card popular">
+                <h3>Standard Pack</h3>
+                <div class="price">$50</div>
+                <ul><li>✔ 3 High-CTR Thumbnails</li><li>✔ 2-3 Days Delivery</li><li>✔ Source File Included (PSD)</li></ul>
+                <a href="https://wa.me/8801701320269" class="btn">Order Now</a>
+            </div>
+            <div class="price-card">
+                <h3>Pro Pack</h3>
+                <div class="price">$90</div>
+                <ul><li>✔ 6 High-CTR Thumbnails</li><li>✔ Priority Delivery</li><li>✔ Source Files Included (PSD)</li></ul>
+                <a href="https://wa.me/8801701320269" class="btn">Order Now</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container contact-section">
+        <h2>Get In Touch</h2>
+        <p class="contact-line">
+            <span class="item"><span class="ic mail"><svg aria-hidden="true"><use href="#i-mail"/></svg></span><span class="lbl">Email:</span> <strong><a href="mailto:ratulislam0987r@gmail.com">ratulislam0987r@gmail.com</a></strong></span>
+            <span class="item"><span class="ic wa"><svg aria-hidden="true"><use href="#i-wa"/></svg></span><span class="lbl">WhatsApp:</span> <strong><a href="https://wa.me/8801701320269" target="_blank" rel="noopener">01701320269</a></strong></span>
+        </p>
+        <div class="contact-links">
+            <a href="mailto:ratulislam0987r@gmail.com"><span class="ic mail"><svg aria-hidden="true"><use href="#i-mail"/></svg></span> Email</a>
+            <a href="https://wa.me/8801701320269" target="_blank" rel="noopener"><span class="ic wa"><svg aria-hidden="true"><use href="#i-wa"/></svg></span> WhatsApp</a>
+            <a href="https://instagram.com/mdratul123456" target="_blank" rel="noopener"><span class="ic ig"><svg aria-hidden="true"><use href="#i-ig"/></svg></span> Instagram</a>
+            <a href="https://www.linkedin.com/in/md-ratul-designhub-748b7b337/" target="_blank" rel="noopener"><span class="ic in"><svg aria-hidden="true"><use href="#i-in"/></svg></span> LinkedIn</a>
+        </div>
+    </section>
+</div>
+
+<script>
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+        window.__lightboxOpen = true;
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        window.__lightboxOpen = false;
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    /* ---------- Smooth slider ----------
+       Row 1 = slow, row 2 = faster, row 3 = slowest.
+       Every design appears once. A hidden copy of each row makes the loop endless;
+       cards are sized so one row is always longer than the screen, so the same
+       design is never on screen twice. */
+    (function () {
+        var wrapper = document.querySelector('.marquee-wrapper');
+        var tracks = Array.prototype.slice.call(wrapper.querySelectorAll('.marquee-track'));
+        var GAP = 15;
+        var SPEEDS = [40, 72, 26];          // pixels per second: slow, faster, slowest
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var canHover = window.matchMedia('(hover: hover)').matches;
+
+        var fewest = Math.min.apply(null, tracks.map(function (t) { return t.children.length; }));
+
+        tracks.forEach(function (track) {
+            Array.prototype.slice.call(track.children).forEach(function (card) {
+                var copy = card.cloneNode(true);
+                copy.setAttribute('aria-hidden', 'true');
+                copy.removeAttribute('onclick');
+                copy.setAttribute('onclick', card.getAttribute('onclick'));
+                track.appendChild(copy);
+            });
+        });
+
+        var rows = tracks.map(function (el, i) {
+            return { el: el, dir: el.classList.contains('track-right') ? 1 : -1,
+                     base: SPEEDS[i] || 40, v: 0, x: 0, half: 0 };
+        });
+
+        function layout() {
+            var W = wrapper.clientWidth;
+            var minW = window.innerWidth < 700 ? 250 : 300;
+            var need = fewest > 1 ? Math.ceil((W - fewest * GAP) / (fewest - 1)) + 2 : W;
+            wrapper.style.setProperty('--card-w', Math.max(minW, need) + 'px');
+            var scale = window.innerWidth < 700 ? 0.8 : 1;
+            rows.forEach(function (r) {
+                var old = r.half;
+                r.half = r.el.scrollWidth / 2;
+                if (old) r.x = r.x * (r.half / old);
+                else r.x = r.dir === 1 ? -r.half : 0;
+                r.speed = r.base * scale;
+            });
+        }
+
+        layout();
+        var rt;
+        window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(layout, 150); });
+        window.addEventListener('load', layout);
+
+        var hovering = false;
+        if (canHover) {
+            wrapper.addEventListener('mouseenter', function () { hovering = true; });
+            wrapper.addEventListener('mouseleave', function () { hovering = false; });
+        }
+
+        if (reduce) return;
+
+        var last = performance.now();
+        function frame(now) {
+            var dt = Math.min((now - last) / 1000, 0.05);
+            last = now;
+            var target = (hovering || window.__lightboxOpen) ? 0 : 1;
+            rows.forEach(function (r) {
+                // ease in and out like a real moving belt (no sudden stop or start)
+                r.v += (target - r.v) * (1 - Math.exp(-dt * 3.2));
+                r.x += r.dir * r.speed * r.v * dt;
+                if (r.dir === -1 && r.x <= -r.half) r.x += r.half;
+                if (r.dir === 1 && r.x >= 0) r.x -= r.half;
+                r.el.style.transform = 'translate3d(' + r.x.toFixed(2) + 'px,0,0)';
+            });
+            requestAnimationFrame(frame);
+        }
+        // start moving gently from rest
+        rows.forEach(function (r) { r.v = 0; });
+        requestAnimationFrame(function (t) { last = t; frame(t); });
+    })();
+</script>
+
+</body>
+</html>
